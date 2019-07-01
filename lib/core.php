@@ -10,6 +10,15 @@ class nepska_election{
 		include('koneksi.php');
 		$this->conn = $koneksi;
 	}
+	
+	function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){
+    $pieces = [];
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $pieces []= $keyspace[random_int(0, $max)];
+    }
+    return implode('', $pieces);
+	}
 
 	function register($email, $user, $pass){
 	 	$insert_query = "INSERT INTO `user` (`id`, `email`, `user`, `pass`, `status`) VALUES (NULL, ?, ?, ?, '1')";
