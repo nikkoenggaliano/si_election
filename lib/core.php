@@ -82,9 +82,26 @@ class nepska_election{
 			return True;
 		}else{
 			return False;
+		}		
+	}
+
+	function admin_login($user,$pass){
+		$pass = sha1(md5($pass));
+		$query = "SELECT * FROM `admin` WHERE `username` = ? and `password` = ?";
+
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("ss", $user, $pass);
+		$prepare->execute();
+		$get_result = $prepare->get_result();
+		$result     = $get_result->fetch_assoc();
+
+		if($get_result->num_rows == 1){
+			$_SESSION['admin'] = $result['id'];
+			return True;
+		}else{
+			return False;
 		}
 
-		
 	}
 
 
