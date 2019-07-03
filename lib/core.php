@@ -87,6 +87,7 @@ class nepska_election{
 
 	function admin_login($user,$pass){
 		$pass = sha1(md5($pass));
+		
 		$query = "SELECT * FROM `admin` WHERE `username` = ? and `password` = ?";
 
 		$prepare = $this->conn->prepare($query);
@@ -102,6 +103,11 @@ class nepska_election{
 			return False;
 		}
 
+	}
+
+	function global_logout(){
+		session_destroy();
+		die(header("location: index.php"));
 	}
 
 

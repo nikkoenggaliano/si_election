@@ -1,6 +1,11 @@
 <?php 
 include '../../lib/core.php';
 $admin_main = new nepska_election();
+
+if(!isset($_SESSION['admin'])){
+  die(header("location: auth.php"));
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -313,7 +318,6 @@ body.mobile-nav-active #mobile-nav {
       <nav id="nav-menu-container">
         <ul class="nav-menu">
           <li class="menu-active"><a href="">Home</a></li>
-          <li><a href="">About Us</a></li>
           <li><a href="">List Election</a></li>
           <li><a href="">List User</a></li>
           
@@ -333,6 +337,7 @@ body.mobile-nav-active #mobile-nav {
               <li><a href="#">Drop Down 5</a></li>
             </ul>
           </li>
+            <li><a href="api_auth.php?logout=true">Log Out!</a></li>
           <!-- <li><a href="">Contact</a></li> -->
         </ul>
       </nav><!-- #nav-menu-container -->

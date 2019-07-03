@@ -160,6 +160,7 @@ $(document).on('click', '#login', ()=>{
         },
         success:function(respon){
             if(respon){
+                //console.log(respon);
                 window.location.href = "index.php";
             }else{
                 console.log(respon);
