@@ -1,4 +1,7 @@
-<?php
+<?php ob_start();
+
+require_once 'header.php';
+
 $jumlah = "";
 $name_event = "";
 
@@ -23,11 +26,32 @@ if(isset($_GET['event'], $_GET['jumlah'])){
    die(header("location: event.php"));
 }
 
-if(isset($_POST['nama'], $_POST['foto'])){
-   die(var_dump($_POST));
-}
-require_once 'header.php';
+if(isset($_POST['event'],$_POST['kode'], $_POST['nama'], $_POST['foto'])){
+   if(count($_POST['nama']) == count($_POST['foto'])){
+      if(is_array($_POST['nama']) and is_array($_POST['foto'])){
 
+         foreach($_POST['nama'] as $key => $check1){
+            if(strlen($check1) < 5 or empty($check1)){
+               die(header("location: index.php?alert=".$key));
+            }
+         }
+
+         foreach($_POST['foto'] as $ke => $check2){
+            if(strlen($check2) < 5 or empty($check2)){
+               die(header("location: index.php?alero=".$ke));
+            }
+         }
+
+         $insert_kandidat = $admin_main->insert_kandidat($_POST['kode'], $_POST['nama'], $_POST['foto']);
+         if($insert_kandidat){
+            $insert_event = $admin_main->insert_event($_POST['event'], $_POST['kode']);
+            if($insert_event){
+               die('index.php?status=go!');
+            }
+         }
+      }
+   }
+}
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -127,6 +151,8 @@ font-size: 20px;
          <div class="col-md-4 mx-auto">
             <div class="myform form ">
                <form action="" method="post" name="login">
+                  <input type="hidden" name="kode" value="<?= $_GET['token'] ?>">
+                  <input type="hidden" name="event" value="<?= base64_decode($_GET['event']) ?>">
 <!--                   <div class="form-group">
                      <input type="text" name="nama[]"  class="form-control my-input" id="name" placeholder="Nama Kandidat">
                      <br>

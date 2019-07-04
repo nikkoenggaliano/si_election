@@ -317,8 +317,8 @@ body.mobile-nav-active #mobile-nav {
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-          <li class="menu-active"><a href="">Home</a></li>
-          <li><a href="">List Election</a></li>
+          <li class="menu-active"><a href="index.php">Home</a></li>
+          <li><a href="create_event.php">Create Election</a></li>
           <li><a href="">List User</a></li>
           
           <li class="menu-has-children"><a href="">Drop Down</a>

@@ -1,138 +1,185 @@
-<?php  ob_start();
-require_once 'header.php'; 
-if(isset($_POST['event'], $_POST['kandidat'])){
-		$random_token = $admin_main->random_str(random_int(6,10));
-		$name = base64_encode($_POST['event']);
-		$number = is_numeric($_POST['kandidat']) ? $_POST['kandidat'] : 2;
-		die(header("location: create_kandidat.php?event=".$name."&jumlah=".$number."&token=".$random_token));
-	}
+<?php ob_start();
+
+include 'header.php';
+
+
+$render_track = function($judul, $url, $jumlah){
+   $ret = <<< HTML
+	      <div class="tracking-item">
+		  <div class="tracking-icon status-intransit">
+		  <svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+		  <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>
+		         </svg>
+		  </div>
+		  <div class="tracking-date">Jumlah<span>$jumlah</span></div>
+		  <div class="tracking-content">$judul<span>$url</span></div>
+		    </div>
+	HTML;
+   return $ret;
+};
+
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
-
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <style type="text/css">
-	.send-button{
-background: #54C7C3;
-width:100%;
-font-weight: 600;
-color:#fff;
-padding: 8px 25px;
+	
+.tracking-detail {
+ padding:3rem 0
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+#tracking {
+ margin-bottom:1rem
 }
-.g-button{
-color: #fff !important;
-border: 1px solid #EA4335;
-background: #ea4335 !important;
-width:100%;
-font-weight: 600;
-color:#fff;
-padding: 8px 25px;
+[class*=tracking-status-] p {
+ margin:0;
+ font-size:1.1rem;
+ color:#fff;
+ text-transform:uppercase;
+ text-align:center
 }
-.my-input{
-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-cursor: text;
-padding: 8px 10px;
-transition: border .1s linear;
+[class*=tracking-status-] {
+ padding:1.6rem 0
 }
-.header-title{
-margin: 5rem 0;
+.tracking-status-intransit {
+ background-color:#65aee0
 }
-h1{
-font-size: 31px;
-line-height: 40px;
-font-weight: 600;
-color:#4c5357;
+.tracking-status-outfordelivery {
+ background-color:#f5a551
 }
-h2{
-color: #5e8396;
-font-size: 21px;
-line-height: 32px;
-font-weight: 400;
+.tracking-status-deliveryoffice {
+ background-color:#f7dc6f
 }
-.login-or {
-position: relative;
-color: #aaa;
-margin-top: 10px;
-margin-bottom: 10px;
-padding-top: 10px;
-padding-bottom: 10px;
+.tracking-status-delivered {
+ background-color:#4cbb87
 }
-.span-or {
-display: block;
-position: absolute;
-left: 50%;
-top: -2px;
-margin-left: -25px;
-background-color: #fff;
-width: 50px;
-text-align: center;
+.tracking-status-attemptfail {
+ background-color:#b789c7
 }
-.hr-or {
-height: 1px;
-margin-top: 0px !important;
-margin-bottom: 0px !important;
+.tracking-status-error,.tracking-status-exception {
+ background-color:#d26759
 }
-@media screen and (max-width:480px){
-h1{
-font-size: 26px;
+.tracking-status-expired {
+ background-color:#616e7d
 }
-h2{
-font-size: 20px;
+.tracking-status-pending {
+ background-color:#ccc
 }
+.tracking-status-inforeceived {
+ background-color:#214977
+}
+.tracking-list {
+ border:1px solid #e5e5e5
+}
+.tracking-item {
+ border-left:1px solid #e5e5e5;
+ position:relative;
+ padding:2rem 1.5rem .5rem 2.5rem;
+ font-size:.9rem;
+ margin-left:3rem;
+ min-height:5rem
+}
+.tracking-item:last-child {
+ padding-bottom:4rem
+}
+.tracking-item .tracking-date {
+ margin-bottom:.5rem
+}
+.tracking-item .tracking-date span {
+ color:#888;
+ font-size:85%;
+ padding-left:.4rem
+}
+.tracking-item .tracking-content {
+ padding:.5rem .8rem;
+ background-color:#f4f4f4;
+ border-radius:.5rem
+}
+.tracking-item .tracking-content span {
+ display:block;
+ color:#888;
+ font-size:85%
+}
+.tracking-item .tracking-icon {
+ line-height:2.6rem;
+ position:absolute;
+ left:-1.3rem;
+ width:2.6rem;
+ height:2.6rem;
+ text-align:center;
+ border-radius:50%;
+ font-size:1.1rem;
+ background-color:#fff;
+ color:#fff
+}
+.tracking-item .tracking-icon.status-sponsored {
+ background-color:#f68
+}
+.tracking-item .tracking-icon.status-delivered {
+ background-color:#4cbb87
+}
+.tracking-item .tracking-icon.status-outfordelivery {
+ background-color:#f5a551
+}
+.tracking-item .tracking-icon.status-deliveryoffice {
+ background-color:#f7dc6f
+}
+.tracking-item .tracking-icon.status-attemptfail {
+ background-color:#b789c7
+}
+.tracking-item .tracking-icon.status-exception {
+ background-color:#d26759
+}
+.tracking-item .tracking-icon.status-inforeceived {
+ background-color:#214977
+}
+.tracking-item .tracking-icon.status-intransit {
+ color:#e5e5e5;
+ border:1px solid #e5e5e5;
+ font-size:.6rem
+}
+@media(min-width:992px) {
+ .tracking-item {
+  margin-left:10rem
+ }
+ .tracking-item .tracking-date {
+  position:absolute;
+  left:-10rem;
+  width:7.5rem;
+  text-align:right
+ }
+ .tracking-item .tracking-date span {
+  display:block
+ }
+ .tracking-item .tracking-content {
+  padding:0;
+  background-color:transparent
+ }
 }
 </style>
-<body>
-   <div class="container">
-      <div class="col-md-6 mx-auto text-center">
-         <div class="header-title">
-         	<br>
-            <h1 class="wv-heading--title">
-               Create Event 
-            </h1>
-            <h2 class="wv-heading--subtitle">
-              Welcome to Callestasia Event
-            </h2>
-         </div>
-      </div>
-      <div class="row">
-         <div class="col-md-4 mx-auto">
-            <div class="myform form ">
-               <form action="" method="post" name="login">
-                  <div class="form-group">
-                     <input type="text" name="event"  class="form-control my-input" id="name" placeholder="Election Name">
-                  </div>
-                  <div class="form-group">
-                     <input type="number" min="0" name="kandidat" id="phone"  class="form-control my-input" placeholder="Jumlah Kandidat">
-                  </div>
-                  <div class="text-center ">
-                     <!-- <button type="submit" class=" btn btn-block send-button tx-tfm">Create Event</button> -->
-                     <input type="submit" name="go" class="btn btn-block send-button tx-tfm" value="Create Event">
-                  </div>
- <!--                  <div class="col-md-12 ">
-                     <div class="login-or">
-                        <hr class="hr-or">
-                        <span class="span-or">or</span>
-                     </div>
-                  </div>
-                  <div class="form-group">
-                     <a class="btn btn-block g-button" href="#">
-                     <i class="fa fa-google"></i> Sign up with Google
-                     </a>
-                  </div>
-  -->                 <!-- <p class="small mt-3">By signing up, you are indicating that you have read and agree to the <a href="#" class="ps-hero__content__link">Terms of Use</a> and <a href="#">Privacy Policy</a>. -->
-                  </p>
-               </form>
+<br><br><br><br>
+<div class="container">
+    <h2>Nikko Enggaliano</h2>
+   <div class="row">
+      
+      <div class="col-md-12 col-lg-12">
+         <div id="tracking-pre"></div>
+         <div id="tracking">
+            <div class="text-center tracking-status-intransit">
+               <p class="tracking-status text-tight">Lastest Event</p>
+            </div>
+            <div class="tracking-list">
+            		<?php 
+
+            			$get_lastest = $admin_main->lastest_evet();
+            			for($i=0; $i<count($get_lastest); $i++){
+            				echo $render_track($get_lastest[$i]['nama'], $get_lastest[$i]['kode'], $get_lastest[$i]['id']);
+            			}
+            		?>
             </div>
          </div>
       </div>
    </div>
-</body>
+</div>
 </body>
 </html>

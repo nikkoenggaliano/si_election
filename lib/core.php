@@ -110,8 +110,58 @@ class nepska_election{
 		die(header("location: index.php"));
 	}
 
+	function insert_kandidat($kode, $nama, $foto){
+
+		$query = "INSERT INTO `kandidat` (`id`, `id_event`, `nama`, `foto`, `jumlah_suara`) VALUES (NULL, ?, ?, ?, '0');";
+
+		$prepare = $this->conn->prepare($query);
+
+
+		for($i=0; $i<count($nama); $i++){
+			$prepare->bind_param("sss", $kode, $nama[$i], $foto[$i]);
+			$prepare->execute();
+
+		}
+
+		return true;
+	}
+
+	function insert_event($event, $kode){
+
+		$query = "INSERT INTO `event` (`id`, `kode`, `nama`, `status`) VALUES (NULL, ?, ?, '1');";
+		
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("ss", $kode, $event);
+		$prepare->execute();
+
+		if($prepare){
+			return true;
+		}
+	}
+
+	function lastest_evet(){
+		$query = "SELECT * FROM `event` ORDER BY `event`.`id` DESC";
+		$prepare = $this->conn->query($query);
+		while($data = $prepare->fetch_assoc()){
+			$result [] = $data;
+		}
+
+		return $result;
+
+	}
 
 //end of class
 }
 //end of class
+
+
+
+// $test = new nepska_election();
+
+// $array1 = array('tata', 'titi', 'tutu');
+// $array2 = array('d', 'e', 'f');
+// $kode   = 'a';
+
+// $c = $test->insert_kandidat($kode, $array1, $array2);
+// echo $c;
 ?>
