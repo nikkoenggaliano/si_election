@@ -336,8 +336,11 @@ body.mobile-nav-active #mobile-nav {
               <li><a href="#">Drop Down 4</a></li>
               <li><a href="#">Drop Down 5</a></li>
             </ul>
-          </li>
+          </li>           
+
+            <li><a href="upload_foto.php">Upload Foto</a></li>
             <li><a href="api_auth.php?logout=true">Log Out!</a></li>
+
           <!-- <li><a href="">Contact</a></li> -->
         </ul>
       </nav><!-- #nav-menu-container -->
