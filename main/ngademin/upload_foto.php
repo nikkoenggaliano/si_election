@@ -1,19 +1,21 @@
 <?php  ob_start();
-require_once 'header.php'; 
+require_once 'header.php';
+require_once '../../lib/conf.php'; 
 
 if(isset($_POST['name'], $_FILES['foto'])){
    
    if(!empty($_FILES['foto']['type'])){
       
       $dir = '../../assett/foto_uploaded/';
-      $new_name_file = $_POST['name'];
-      $ext_allowed   = array('jpg', 'jpeg');
+      $new_name_file = (strlen($_POST['name']) > 10) ? substr($_POST['name'], 0, 10) : $_POST['name'] ;
+
+      $ext_allowed   = array('jpg', 'jpeg', 'png');
 
       $path = pathinfo($_FILES['foto']['name']);
 
       $ext = strtolower($path['extension']);
-      $new_name_file = $_POST['name'].'.'.$ext;
-      
+      $iden = substr(md5($_FILES['foto']['name']),0,5);
+      $fix_name_file = $new_name_file.'-'.$iden.".".$ext;
       if(!in_array($ext, $ext_allowed)){
          header("location: upload_foto.php?pesan=Sorry Just Image!");exit;
       }
@@ -22,10 +24,13 @@ if(isset($_POST['name'], $_FILES['foto'])){
          header("location: upload_foto.php?pesan=Max Size 5 MB!");exit;
       }
 
-      if(!move_uploaded_file($_FILES['foto']['tmp_name'], $dir.$new_name_file)){
-         header("location: upload_foto.php?pesan=Some Error");exit;  
+      if(move_uploaded_file($_FILES['foto']['tmp_name'], $dir.$fix_name_file)){
+         // header("location: upload_foto.php?pesan=Some Error");exit;  
+         $_SESSION['alert'] = $local_config['base_url']."/"."assett/foto_uploaded/".$fix_name_file;
+         die(header("Refresh: 0"));
       }else{
-         header("location: upload_foto.php?pesan=Success!");exit;  
+         $_SESSION['alert'] = "Sorry!";
+         die(header("Refresh: 0"));
       }
 
    }
@@ -125,6 +130,13 @@ font-size: 20px;
             <h2 class="wv-heading--subtitle">
               Welcome to Callestasia Event
             </h2>
+            <?php 
+               if(isset($_SESSION['alert'])){
+                  $ret = '<h4 class="wv-heading--subtitle" style="color: green;">'.$_SESSION["alert"].'</h4>';
+                  echo $ret;
+                  unset($_SESSION['alert']);
+               }
+            ?>
          </div>
       </div>
       <div class="row">
@@ -135,7 +147,7 @@ font-size: 20px;
                      <input type="text" name="name" class="form-control my-input" id="name" placeholder="Election Name">
                   </div>
                   <div class="form-group">
-                     <input type="file" name="foto" id="foto"  class="form-control my-input" placeholder="Jumlah Kandidat">
+                     <input type="file" name="foto" accept="image/*" id="foto"  class="form-control my-input" placeholder="Jumlah Kandidat">
                   </div>
                   <div class="text-center ">
                      <!-- <button type="submit" class=" btn btn-block send-button tx-tfm">Create Event</button> -->

@@ -1,6 +1,7 @@
 <?php 
 
 include '../lib/koneksi.php';
+include '../lib/conf.php';
 
 $from = $local_config['from'];
 

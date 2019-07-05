@@ -145,10 +145,13 @@ class nepska_election{
 		while($data = $prepare->fetch_assoc()){
 			$result [] = $data;
 		}
-
 		return $result;
-
 	}
+
+	function set_election(){
+		$query = "SELECT * FROM `event` ORDER BY `id` DESC";
+
+		}
 
 //end of class
 }
