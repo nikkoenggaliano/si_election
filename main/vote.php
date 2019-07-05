@@ -1,5 +1,12 @@
 <?php 
 include 'authload.php';
+if(isset($_GET['kode'])){
+	$do_vote = $main->get_kandidat_by_id($_GET['kode']);
+	if($do_vote === NULL){
+		die(header("location: index.php"));
+	}
+}
+
 	$render_kandidat = function($image, $name, $id){
 		$ret = <<< HTML
 			<div class="col-sm">
@@ -43,8 +50,12 @@ include 'authload.php';
 			<input type="hidden" name="from" value="<?= $re_id ?>">
 			<input type="hidden" name="anti" value="<?= $_SESSION['csrf'] ?>">
 		<div class="row">
-			<?php 
-			echo $render_kandidat('https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500', 'nama', '1');
+			<?php
+
+				for($i=0; $i<count($do_vote); $i++){
+					echo $render_kandidat($do_vote[$i]['foto'], $do_vote[$i]['nama'], $do_vote[$i]['id']);	
+			}
+			
 			?>
 			</div>
 		<div class="text-center"> 

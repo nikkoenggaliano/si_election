@@ -149,22 +149,44 @@ class nepska_election{
 	}
 
 	function set_election(){
-		$query = "SELECT * FROM `event` ORDER BY `id` DESC";
-
+		$query = "SELECT * FROM `event` WHERE `status` = 1 ORDER BY `id` DESC LIMIT 1";
+		$prepare = $this->conn->query($query);
+		$data    = $prepare->fetch_assoc();
+		
+		if($prepare->num_rows != 1){
+			return NULL;
+		}else{
+			return $data;
 		}
+	
+	}
+
+
+	function get_kandidat_by_id($kode){
+		$query = "SELECT * FROM `kandidat` WHERE `id_event` = ?";
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("s", $kode);
+		$prepare->execute();
+		$get_result = $prepare->get_result();
+		#var_dump($get_result);
+
+		if($get_result->num_rows == 0){
+			return NULL;
+			exit;
+		}
+
+		while($data = $get_result->fetch_assoc()){
+			$result[] = $data;
+		}
+		return $result;
+
+	}
 
 //end of class
 }
 //end of class
 
-
-
-// $test = new nepska_election();
-
-// $array1 = array('tata', 'titi', 'tutu');
-// $array2 = array('d', 'e', 'f');
-// $kode   = 'a';
-
-// $c = $test->insert_kandidat($kode, $array1, $array2);
-// echo $c;
+// $do = new nepska_election();
+// $go = $do->get_kandidat_by_id('Y1lIFINAE');
+// var_dump($go);
 ?>
