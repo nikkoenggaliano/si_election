@@ -1,6 +1,12 @@
 <?php 
 include 'authload.php';
-if(isset($_GET['kode'])){
+
+
+
+
+if(isset($_GET['kode'], $_SESSION['id'])){
+	die(var_dump($main->cek_pemilih_log($_GET['kode'], $_SESSION['id'])));
+
 	$do_vote = $main->get_kandidat_by_id($_GET['kode']);
 	if($do_vote === NULL){
 		die(header("location: index.php"));
@@ -22,7 +28,12 @@ if(isset($_GET['kode'])){
 		HTML;
 		echo $ret;
 	};
-	
+
+if(isset($_POST['kode'], $_POST['pilihan'])){
+	$exec = $main->do_vote($_POST['kode'], $_POST['pilihan'], $_SESSION['id']);
+	die(var_dump($exec));
+}
+
 
 ?>
 
@@ -46,9 +57,9 @@ if(isset($_GET['kode'])){
 <body>
 	<br>
 	<div class="container">
+		<br><br><br><br>
 		<form method="POST">
-			<input type="hidden" name="from" value="<?= $re_id ?>">
-			<input type="hidden" name="anti" value="<?= $_SESSION['csrf'] ?>">
+			<input type="hidden" name="kode" value="<?= $_GET['kode']; ?>">
 		<div class="row">
 			<?php
 

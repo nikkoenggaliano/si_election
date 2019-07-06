@@ -1,8 +1,5 @@
 <?php ob_start();
-
 include 'header.php';
-
-
 $render_track = function($judul, $url, $jumlah){
    $ret = <<< HTML
 	      <div class="tracking-item">
@@ -158,6 +155,12 @@ $render_track = function($judul, $url, $jumlah){
 }
 </style>
 <br><br><br><br>
+<?php if(isset($_SESSION['alert'])){
+  echo '<script type="text/javascript">swal("Success!", "'.$_SESSION['alert'].'", "success");</script>';
+  unset($_SESSION['alert']);
+}
+
+?>
 <div class="container">
     <h2>Nikko Enggaliano</h2>
    <div class="row">

@@ -261,7 +261,7 @@ $(document).on('click', '#login', ()=>{
       },
       success : function(respon){
        if(respon){
-         window.location.href = "vote.php";
+         window.location.href = "index.php";
        }else{
         console.log(respon);
         swal("Sorry!!", "We Cant find you account!", "warning");

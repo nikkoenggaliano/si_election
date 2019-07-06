@@ -32,13 +32,15 @@ if(isset($_POST['event'],$_POST['kode'], $_POST['nama'], $_POST['foto'])){
 
          foreach($_POST['nama'] as $key => $check1){
             if(strlen($check1) < 5 or empty($check1)){
-               die(header("location: index.php?alert=".$key));
+               $_SESSION['alert'] = "Nama pada form ke ".($key+1)." Kurang dari 5!";
+               die(header("location: index.php"));
             }
          }
 
          foreach($_POST['foto'] as $ke => $check2){
             if(strlen($check2) < 5 or empty($check2)){
-               die(header("location: index.php?alero=".$ke));
+               $_SESSION['alert'] = "URL foto pada form ke ".($key+1)." Kurang dari 5!";
+               die(header("location: index.php"));
             }
          }
 
@@ -46,7 +48,8 @@ if(isset($_POST['event'],$_POST['kode'], $_POST['nama'], $_POST['foto'])){
          if($insert_kandidat){
             $insert_event = $admin_main->insert_event($_POST['event'], $_POST['kode']);
             if($insert_event){
-               die('index.php?status=go!');
+               $_SESSION['alert'] = "Event Berhasil Dibuat!";
+               die(header("location: index.php"));
             }
          }
       }

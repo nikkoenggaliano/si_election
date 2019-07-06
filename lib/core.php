@@ -182,6 +182,71 @@ class nepska_election{
 
 	}
 
+	function cek_pemilih_log($kode,$pemilih){
+		$query = "SELECT * FROM `log_election` WHERE `eid` = ? AND `uid` = ?";
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("ss", $kode, $pemilih);
+		$prepare->execute();
+		$get_result = $prepare->get_result();
+		
+		if($get_result->num_rows == 0){
+			return True;
+		}else{
+			return False;
+		}
+	}
+
+	function write_log($kode, $pemilih){
+		$query = "INSERT INTO `log_election` (`id`, `eid`, `uid`) VALUES (NULL, ?, ?)";
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("ss", $kode, $pemilih);
+		$prepare->execute();
+
+		if($prepare){
+			return True;
+		}
+	}
+
+	function do_vote($id, $pilihan, $pemilih){
+		$query_check1 = "SELECT * FROM `event` WHERE `kode` = ?";
+		$prepare1 = $this->conn->prepare($query_check1);
+		$prepare1->bind_param("s", $id);
+		$prepare1->execute();
+		$get_result1 = $prepare1->get_result();
+
+		if($get_result1->num_rows != 1){
+			return 'Event Tidak Ada';
+			exit;
+		}
+
+		$query_check2 = "SELECT * FROM `kandidat` WHERE `id_event` = ? and `id` = ?";
+		$prepare2 = $this->conn->prepare($query_check2);
+		$prepare2->bind_param("ss", $id, $pilihan);
+		$prepare2->execute();
+		$get_result2 = $prepare2->get_result();
+
+		if($get_result2->num_rows == 0){
+			return 'Pilihan Tidak Valid';
+			exit;
+		}
+
+		$main_query = "UPDATE `kandidat` SET `jumlah_suara` = (`jumlah_suara`+1) WHERE `id` = ? AND `id_event` = ?";
+		$preapre = $this->conn->prepare($main_query);
+		$preapre->bind_param("ss", $pilihan, $id);
+		$preapre->execute();
+		
+		if($preapre->affected_rows == 1){
+			$write = $this->write_log($id, $pemilih);
+			if($write){
+				return True;
+			}
+		}
+
+		#var_dump($get_result);
+
+
+	}
+
 //end of class
 }
 //end of class
