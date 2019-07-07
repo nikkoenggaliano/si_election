@@ -243,8 +243,26 @@ class nepska_election{
 		}
 
 		#var_dump($get_result);
+	}
 
 
+	function result_voting($kode){
+		$query = "SELECT * FROM `kandidat` WHERE `id_event` = ?";
+		$prepare = $this->conn->prepare($query);
+		$prepare->bind_param("s", $kode);
+		$prepare->execute();
+		$get_result = $prepare->get_result();
+		
+		if($get_result->num_rows == 0){
+			return False;
+			exit;
+		}
+
+		while($data = $get_result->fetch_assoc()){
+			$result[] = $data;
+		}
+
+		return $result;
 	}
 
 //end of class

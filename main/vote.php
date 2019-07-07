@@ -5,7 +5,9 @@ include 'authload.php';
 
 
 if(isset($_GET['kode'], $_SESSION['id'])){
-	die(var_dump($main->cek_pemilih_log($_GET['kode'], $_SESSION['id'])));
+	if(!$main->cek_pemilih_log($_GET['kode'], $_SESSION['id'])){
+		die(header("location: result.php?kode=".$_GET['kode']));
+	}
 
 	$do_vote = $main->get_kandidat_by_id($_GET['kode']);
 	if($do_vote === NULL){
