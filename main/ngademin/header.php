@@ -320,7 +320,7 @@ body.mobile-nav-active #mobile-nav {
         <ul class="nav-menu">
           <li class="menu-active"><a href="index.php">Home</a></li>
           <li><a href="create_event.php">Create Election</a></li>
-          <li><a href="">List User</a></li>
+          <li><a href="list_foto.php">List Foto</a></li>
           
           <li class="menu-has-children"><a href="">Drop Down</a>
             <ul>

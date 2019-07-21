@@ -33,7 +33,7 @@ if(isset($_GET['kode'], $_SESSION['id'])){
 
 if(isset($_POST['kode'], $_POST['pilihan'])){
 	$exec = $main->do_vote($_POST['kode'], $_POST['pilihan'], $_SESSION['id']);
-	die(var_dump($exec));
+	die(header("location: result.php?kode=".$_GET['kode']));
 }
 
 
